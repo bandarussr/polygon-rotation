@@ -1,0 +1,19 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang++",
+      "-std=c++17",
+      "-Wall",
+      "-Wextra",
+      "-Iinclude",
+      "-stdlib=libc++",
+      "-c",
+      "-o",
+      "build/PolygonRotation.o",
+      "src/PolygonRotation.cpp"
+    ],
+    "directory": "/mnt/c/users/banda/documents/code/polygon-rotation",
+    "file": "/mnt/c/users/banda/documents/code/polygon-rotation/src/PolygonRotation.cpp",
+    "output": "/mnt/c/users/banda/documents/code/polygon-rotation/build/PolygonRotation.o"
+  }
+]
