@@ -40,6 +40,7 @@ double PolygonRotation::getVolume(std::vector<int> x, std::vector<int> y) {
             it->x = fmax(it->x, p.x);
         }
     }
+    
     for (const auto &p : neg) {
         auto it = std::find_if(merged.begin(), merged.end(), [&](const Point &mp) { return mp.y == p.y; });
         if (it == merged.end()) {
