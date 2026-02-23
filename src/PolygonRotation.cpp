@@ -1,7 +1,6 @@
 #include "PolygonRotation.h"
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <vector>
 
 double PolygonRotation::getVolume(std::vector<int> x, std::vector<int> y) {
@@ -75,24 +74,53 @@ double PolygonRotation::getVolume(std::vector<int> x, std::vector<int> y) {
 }
 
 PolygonRotation::Point *PolygonRotation::getIntersection(Line l1, Line l2) {
-    // For the purposes of this problem, we do not have to worry about
-    // either line being vertical, i.e. having an undefined slope.
+    const double epsilon = 1e-9;
+    bool l1_vert = fabs(l1.p2.x - l1.p1.x) < epsilon;
+    bool l2_vert = fabs(l2.p2.x - l2.p1.x) < epsilon;
 
-    // Find m and b.
-    double l1_m = (l1.p2.y - l1.p1.y) / (l1.p2.x - l1.p1.x);
-    double l1_b = l1.p1.y - l1_m * l1.p1.x;
-
-    double l2_m = (l2.p2.y - l2.p1.y) / (l2.p2.x - l2.p1.x);
-    double l2_b = l2.p1.y - l2_m * l2.p1.x;
-
-    // Parallel (use epsilon comparison for floating point).
-    if (fabs(l1_m - l2_m) < std::numeric_limits<double>::epsilon()) {
+    // Handle vertical lines (use epsilon comparison for floating point).
+    if (l1_vert && l2_vert) {
         return nullptr;
     }
 
-    // Find x and y.
-    double x = (l2_b - l1_b) / (l1_m - l2_m);
-    double y = l1_m * x + l1_b;
+    double x, y;
+    if (l2_vert) {
+        // l2 is vertical, x is fixed, solve for y on l1.
+        x = l2.p1.x;
+        double l1_m = (l1.p2.y - l1.p1.y) / (l1.p2.x - l1.p1.x);
+        double l1_b = l1.p1.y - l1_m * l1.p1.x;
+        y = l1_m * x + l1_b;
+    } else if (l1_vert) {
+        // l1 is vertical, x is fixed, solve for y on l2.
+        x = l1.p1.x;
+        double l2_m = (l2.p2.y - l2.p1.y) / (l2.p2.x - l2.p1.x);
+        double l2_b = l2.p1.y - l2_m * l2.p1.x;
+        y = l2_m * x + l2_b;
+    } else {
+        // Find m and b.
+        double l1_m = (l1.p2.y - l1.p1.y) / (l1.p2.x - l1.p1.x);
+        double l1_b = l1.p1.y - l1_m * l1.p1.x;
+
+        double l2_m = (l2.p2.y - l2.p1.y) / (l2.p2.x - l2.p1.x);
+        double l2_b = l2.p1.y - l2_m * l2.p1.x;
+
+        // Parallel.
+        if (fabs(l1_m - l2_m) < epsilon) {
+            return nullptr;
+        }
+
+        // Find x and y.
+        x = (l2_b - l1_b) / (l1_m - l2_m);
+        y = l1_m * x + l1_b;
+    }
+
+    // Make sure the intersection is within the line segments.
+    if (y < fmax(fmin(l1.p1.y, l1.p2.y), fmin(l2.p1.y, l2.p2.y)) - epsilon) {
+        return nullptr;
+    }
+    if (y > fmin(fmax(l1.p1.y, l1.p2.y), fmax(l2.p1.y, l2.p2.y)) + epsilon) {
+        return nullptr;
+    }
 
     return new Point(x, y);
 }
