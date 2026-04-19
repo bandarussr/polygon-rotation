@@ -4,20 +4,18 @@
 
 int main() {
     int n;
-    std::cin >> n;
-    std::vector<int> x(n);
-    std::vector<int> y(n);
-    
-    for (int i = 0; i < n; i++) {
-        std::cin >> x[i];
-    }
-    
-    for (int i = 0; i < n; i++) {
-        std::cin >> y[i];
-    }
+    while (std::cin >> n) {
+        std::vector<int> x(n);
+        std::vector<int> y(n);
 
-    double vol = PolygonRotation::getVolume(x, y);
-    std::printf("%lf\n", vol);
+        for (int i = 0; i < n; i++) {
+            std::cin >> x[i];
+        }
 
-    exit(0);
+        for (int i = 0; i < n; i++) {
+            std::cin >> y[i];
+        }
+
+        std::cout << PolygonRotation::getVolume(x, y) << std::endl;
+    }
 }
