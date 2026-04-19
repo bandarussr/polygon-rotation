@@ -1,6 +1,6 @@
 # Compiler and compile flags
 COMPILER = clang++
-FLAGS = -std=c++17 -Wall -Wextra -Wshadow -Wunreachable-code
+FLAGS = -std=c++17 -Wall -Wextra -Wshadow -Wunreachable-code -O3
 
 ifneq ($(filter $(USER), shashanksrb bandarussr banda),)
 	FLAGS += -stdlib=libc++
